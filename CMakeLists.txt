@@ -74,7 +74,10 @@ if (MSVC)
   add_definitions(-D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE)
 endif(MSVC)
 
-include_directories(${Uri_SOURCE_DIR}/src ${Uri_SOURCE_DIR}/include)
+# Export target if we are building it as standalone find_package
+if (CMAKE_PARENT_LIST_FILE STREQUAL CMAKE_CURRENT_LIST_FILE)
+	set(Uri_EXPORT_TARGET true)
+endif()
 
 add_subdirectory(src)
 

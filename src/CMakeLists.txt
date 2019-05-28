@@ -16,6 +16,15 @@ set(Uri_SRCS
 
 add_library(network-uri ${Uri_SRCS})
 target_link_libraries(network-uri)
+target_include_directories(network-uri
+  PRIVATE
+    ${Uri_SOURCE_DIR}/src
+  PUBLIC
+    $<BUILD_INTERFACE:${Uri_SOURCE_DIR}/include>
+  INTERFACE
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+)
+set_property(TARGET network-uri PROPERTY POSITION_INDEPENDENT_CODE ON)
 if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   if (NOT Uri_DISABLE_LIBCXX)
     target_link_libraries(network-uri "c++")
@@ -27,6 +36,15 @@ set(Uri_SRCS ${Uri_SRCS} PARENT_SCOPE)
 
 install(
   TARGETS network-uri
+  EXPORT cpp-netlib-uriConfig
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
 )
+
+if (Uri_EXPORT_TARGET)
+  install(
+    EXPORT cpp-netlib-uriConfig
+    DESTINATION lib/cmake/cpp-netlib-uri
+    NAMESPACE cpp-netlib::
+  )
+endif()
